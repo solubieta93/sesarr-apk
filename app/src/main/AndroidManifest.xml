@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.myapplication2">
+
+
+android:versionName="5" android:versionCode="0">
+
+<uses-sdk android:targetSdkVersion="29" android:minSdkVersion="16"/>
+
+<uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+
+<uses-permission android:name="android.permission.BLUETOOTH"/>
+
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
+<uses-permission android:name="android.permission.INTERNET"/>
+
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
+<uses-permission android:name="android.permission.VIBRATE"/>
+
+<uses-permission android:name="android.permission.preferExternal"/>
+
+<uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES"/>
+android:installLocation="preferExternal"
+
+-<application android:label="Paciente" android:icon="@drawable/electro3">
+    android:debuggable="true"
+
+    -<activity android:name=".RegistrarActivity" android:configChanges="orientation|keyboardHidden">
+
+
+    -<intent-filter>
+
+    <action android:name="android.intent.action.MAIN"/>
+
+    <category android:name="android.intent.category.LAUNCHER"/>
+
+</intent-filter>
+
+</activity>
+
+    <activity android:name=".BluetoothChat" android:label="Procesando Datos" android:configChanges="orientation|keyboardHidden"> </activity>
+
+    <activity android:name=".SUserInfo" android:configChanges="orientation|keyboardHidden"> </activity>
+
+    <activity android:name=".PoderEntrar" android:label="Informacion para parear" android:theme="@android:style/Theme.Dialog"> </activity>
+
+    <activity android:name=".entraID" android:label="Id Paciente" android:theme="@android:style/Theme.Dialog"> </activity>
+
+</application>
+
+</manifest>
