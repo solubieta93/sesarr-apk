@@ -43,6 +43,10 @@ import java.util.Set;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -83,98 +87,53 @@ public  class RegistrarActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-		Retrofit retrofit = new Retrofit.Builder()
-				.baseUrl("https://jsonplaceholder.typicode.com/")
-				.addConverterFactory(GsonConverterFactory.create())
-				.build();
-		JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
-		Call<List<Post>> call = jsonPlaceHolderApi.getPosts();
-		call.enqueue(new Callback<List<Post>>() {
-			@Override
-			public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
-				if (!response.isSuccessful()) {
-
-					return;
-				}
-				List<Post> posts = response.body();
-				for (Post post : posts) {
-					String content = "";
-					content += "ID: " + post.getId() + "\n";
-					content += "User ID: " + post.getUserId() + "\n";
-					content += "Title: " + post.getTitle() + "\n";
-					content += "Text: " + post.getText() + "\n\n";
-
-				}
-			}
-			@Override
-			public void onFailure(Call<List<Post>> call, Throwable t) {
-
-			}
-		});
-
-
-
-
-
-		//SubeFile("/sdcard/ECGSUBCOMBIOMED4567/ECG4567-00.SUB");
-
-		/////////////////////////////////////////
-		//seguridad para no permitir copiar la app
-		/*myFile = new File("/mnt/sdcard/Android/data/mphone.pho");
-		//Comprueba si el file no existe
-		if (!myFile.exists()) {
-			//   enviaSMS();
-			sacaAviso("Instalación Ilegal!!!!",true);
-			finish();
-		}
-		*/
-
-
-
-
-//		else {*/
-//            setContentView(R.layout.main);
+//		Retrofit retrofit = new Retrofit.Builder()
+//				.baseUrl("https://jsonplaceholder.typicode.com/")
+//				.addConverterFactory(GsonConverterFactory.create())
+//				.build();
+//		JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
+//		Call<List<Post>> call = jsonPlaceHolderApi.getPosts();
+//		call.enqueue(new Callback<List<Post>>() {
+//			@Override
+//			public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
+//				if (!response.isSuccessful()) {
 //
-//			//con BD y HorasRegistro
-//			db = new BD(this);
-//			File FBD = new File(camino);
-//			//Comprueba si el file no existe
-//			if (!FBD.exists()) {
-////			Toast.makeText(getBaseContext(), " Nuevo Paciente", Toast.LENGTH_LONG).show();
+//					return;
+//				}
+//				List<Post> posts = response.body();
+//				for (Post post : posts) {
+//					String content = "";
+//					content += "ID: " + post.getId() + "\n";
+//					content += "User ID: " + post.getUserId() + "\n";
+//					content += "Title: " + post.getTitle() + "\n";
+//					content += "Text: " + post.getText() + "\n\n";
+//
+//				}
 //			}
-////		    else {
-////			   Toast.makeText(getBaseContext(), "Ya hay Paciente", Toast.LENGTH_LONG).show();
-//			   int cantreg = BD.getDatos().size();
-//			   if (cantreg == 0)
-////		          Toast.makeText(getBaseContext(), "BD vacia", Toast.LENGTH_LONG).show();
-////		       else
-////			      Toast.makeText(getBaseContext(), "BD NO vacia", Toast.LENGTH_LONG).show();
-//		       //orientacion vertical de la pantalla
-//			   this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-//			   //boton conectar dispositivos
-//			   //B7=(Button)findViewById(R.id.BBT);
-//			   B7 = (TextView) findViewById(R.id.textView1);
-//			   //donde voy poner nombre de equipo pareado
-//			   B7.setText("");
-//			   //boton configurar aplicacion
-//			   B3 = (Button) findViewById(R.id.BMedico);
-//		       //4-dic
-//			   cargarConfiguracion();
-//			   botonesalinicio();
-////		    }
+//			@Override
+//			public void onFailure(Call<List<Post>> call, Throwable t) {
+//
+//			}
+//		});
+		//File Archivo= new File(getFilesDir(),"ECG00.beg");
+		//File Archivo= new File("/storage/emulated/0/ECG00.beg");
+        //File archivo=NewFile(Enviroment.getExternalStorageDirectory("ECG00.beg");
+		//SubeFile("/storage/emulated/0/ECG00.beg");
+		SubeFile("ECG00.beg");
       }
+
 
 	//para subir files al sitio http para subir por head
 	///////////////////////////////////////////////////////////
 	public void SubeFile(String subefichero) {
     	try {
 			Retrofit retrofit = new Retrofit.Builder()
-					.baseUrl("https://combiomed-api.biocubafarma.cu/")
+					.baseUrl("https://sesarr.icid.cu/api/")
 					.addConverterFactory(GsonConverterFactory.create())
 					.build();
 
 			ApiInterface api = retrofit.create(ApiInterface.class);
-			Call<AuthModel> call = api.authProof("316", "Combio@316");
+			Call<AuthModel> call = api.authentication("316", "Combio@316");
 			call.enqueue(new Callback<AuthModel>() {
 				@Override
 				public void onResponse(Call<AuthModel> call, Response<AuthModel> response) {
@@ -182,20 +141,43 @@ public  class RegistrarActivity extends Activity {
 						subiofile = false;
 					}
 					String token = response.body().getToken();
-					Call<String> callFile = api.uploadFile(""+subefichero);
-					callFile.enqueue(new Callback<String>() {
+
+//					getRealPathFromURI
+					File file = new File(subefichero);
+
+					RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+
+					MultipartBody.Part multipartBody = MultipartBody.Part.createFormData("files",file.getName(),requestFile);
+
+					Call<ResponseBody> responseBodyCall = api.uploadFile(multipartBody, "Bearer "+token);
+					responseBodyCall.enqueue(new Callback<ResponseBody>() {
 						@Override
-						public void onResponse(Call<String> call, Response<String> response) {
-							if(!response.isSuccessful()){
-								subiofile = false;
-							}
+						public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+							Log.d("Success", "success "+response.code());
+							Log.d("Success", "success "+response.message());
+
 						}
 
 						@Override
-						public void onFailure(Call<String> call, Throwable t) {
-							subiofile = false;
+						public void onFailure(Call<ResponseBody> call, Throwable t) {
+							Log.d("failure", "message = " + t.getMessage());
+							Log.d("failure", "cause = " + t.getCause());
 						}
 					});
+//					Call<String> callFile = api.uploadFile(""+subefichero);
+//					callFile.enqueue(new Callback<String>() {
+//						@Override
+//						public void onResponse(Call<String> call, Response<String> response) {
+//							if(!response.isSuccessful()){
+//								subiofile = false;
+//							}
+//						}
+//
+//						@Override
+//						public void onFailure(Call<String> call, Throwable t) {
+//							subiofile = false;
+//						}
+//					});
 				}
 
 				@Override
