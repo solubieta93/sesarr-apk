@@ -27,7 +27,7 @@ android:installLocation="preferExternal"
 -<application android:label="Paciente" android:icon="@drawable/electro3">
     android:debuggable="true"
 
-    -<activity android:name=".RegistrarActivity" android:configChanges="orientation|keyboardHidden">
+    -<activity android:name=".RegistrarActivitysol" android:configChanges="orientation|keyboardHidden">
 
 
     -<intent-filter>
