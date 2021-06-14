@@ -27,6 +27,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -629,8 +630,12 @@ public class BluetoothChat extends Activity {
         Fma = Integer.toString(FCMax);
         Fmi = Integer.toString(FCMin);
         String Pre = Integer.toString(CantPre);
+        BD Dbd = new BD(this);
+        SQLiteDatabase db = Dbd.getWritableDatabase();
+
         String nombrebd = nombrefile.substring(0, 5);
-        BD.addDato(HoraReg, nombrebd, FREC, Fma, Fmi, Pre);
+        BD.addDato(HoraReg, nombrebd, FREC, Fma, Fmi, Pre,db);
+        //BD.addDato();
     }
 
     //////////////////////////////////////////////////////////////////////////////////////
@@ -1236,7 +1241,7 @@ public class BluetoothChat extends Activity {
         super.onCreate(savedInstanceState);
         if (D) Log.e(TAG, "+++ ON CREATE +++");
         // Set up the window layout
-        requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
+//2021        requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(R.layout.main1);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         cronometro = (Chronometer) findViewById(R.id.chronometer1);
@@ -1251,9 +1256,9 @@ public class BluetoothChat extends Activity {
         direccionBT = recibido.getString("DireccionRemota");
         letreroaviso = (TextView) findViewById(R.id.muestrasuelto);
         letreroaviso.setVisibility(View.INVISIBLE);
-        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.custom_title);
+//2021        getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.custom_title);
         mTitle = (TextView) findViewById(R.id.title_left_text);
-        mTitle.setText("Registrando...");
+//2021        mTitle.setText("Registrando...");
         mTitle = (TextView) findViewById(R.id.title_right_text);
         // Get local Bluetooth adapter, esto es unico
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -1338,12 +1343,13 @@ public class BluetoothChat extends Activity {
                                 cronometro.start();
                                 //dialog = ProgressDialog.show(BluetoothChat.this,"Adquiriendo se�al","Espere por favor...", true);
                                 //Mantener encendida la pantalla
-                                getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+  //2021                              getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                             }
                             break;
                         ////////////////////////////////////////////////////
                         case BluetoothChatService.STATE_CONNECTING:
-                            mTitle.setText("Conectando...");
+  //2021                          mTitle.setText("Conectando...");
+                            boolean debugeando = true;
                             break;
                         ////////////////////////////////////////////////////
                         case BluetoothChatService.STATE_LISTEN:
@@ -1352,11 +1358,11 @@ public class BluetoothChat extends Activity {
                             boolean pru = mioconectado;
                             if (mioconectado) {
                                 if (msg.arg2 == -1) {
-                                    mTitle.setText("Procesando datos..");
+       //2021                             mTitle.setText("Procesando datos..");
                                     procesaregistro();
                                     cronometro.stop();
                                 } else if (msg.arg2 == 0) {
-                                    mTitle.setText("Interrumpida la conexion..");
+   //2021                                 mTitle.setText("Interrumpida la conexion..");
                                     Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
                                     vibrator.vibrate(1000);
                                     cant = "17";

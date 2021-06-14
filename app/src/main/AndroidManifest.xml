@@ -42,8 +42,6 @@ android:installLocation="preferExternal"
 
     <activity android:name=".BluetoothChat" android:label="Procesando Datos" android:configChanges="orientation|keyboardHidden"> </activity>
 
-    <activity android:name=".SUserInfo" android:configChanges="orientation|keyboardHidden"> </activity>
-
     <activity android:name=".PoderEntrar" android:label="Informacion para parear" android:theme="@android:style/Theme.Dialog"> </activity>
 
     <activity android:name=".entraID" android:label="Id Paciente" android:theme="@android:style/Theme.Dialog"> </activity>

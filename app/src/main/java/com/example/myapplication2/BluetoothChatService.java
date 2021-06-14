@@ -337,6 +337,7 @@ public class BluetoothChatService {
             // REALIZA LA CONEXION CON EL SOCKETBLUETOOTH
             try {
                 // ESTO ES UN BLOQUE SOLO RECIBIREMOS LA CONEXION ESTABLECIDA O UNA EXCEPCION
+                //2021 aqui se pierde
                 mmSocket.connect();
                 } 
                   catch (IOException e) {

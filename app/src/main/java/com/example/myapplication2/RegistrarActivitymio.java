@@ -11,6 +11,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Build;
@@ -85,21 +86,19 @@ public  class RegistrarActivitymio extends Activity {
 		if(Build.VERSION.SDK_INT >= 23) {
 			ExternalStoragePermissions.verifyStoragePermissions(this);
 		}
-
-		db = new BD(this);
-//2021			File FBD = new File(camino);
-			//Comprueba si el file no existe
-/*			if (!FBD.exists()) {
+//2021
+		BD Dbd = new BD(this);
+		SQLiteDatabase db = Dbd.getWritableDatabase();
+		if (db !=null){
 			Toast.makeText(getBaseContext(), " Nuevo Paciente", Toast.LENGTH_LONG).show();
-			}
-		    else {
-			   Toast.makeText(getBaseContext(), "Ya hay Paciente", Toast.LENGTH_LONG).show();
-*/
-		int cantreg = BD.getDatos().size();
-			   if (cantreg == 0)
-//		          Toast.makeText(getBaseContext(), "BD vacia", Toast.LENGTH_LONG).show();
-//		       else
-//			      Toast.makeText(getBaseContext(), "BD NO vacia", Toast.LENGTH_LONG).show();
+		}
+		else
+			Toast.makeText(getBaseContext(), "Ya hay Paciente", Toast.LENGTH_LONG).show();
+		int cantreg = BD.getDatos(db).size();
+		if (cantreg == 0)
+		          Toast.makeText(getBaseContext(), "BD vacia", Toast.LENGTH_LONG).show();
+		       else
+			      Toast.makeText(getBaseContext(), "BD NO vacia", Toast.LENGTH_LONG).show();
 		       //orientacion vertical de la pantalla
 			   this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 			   //boton conectar dispositivos
@@ -112,8 +111,8 @@ public  class RegistrarActivitymio extends Activity {
 		       //4-dic
 			   cargarConfiguracion();
 			   botonesalinicio();
-		   // }
-      }
+		  }
+
 	//////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////
@@ -747,16 +746,16 @@ public  class RegistrarActivitymio extends Activity {
 		  //LEE FILE ConfBECG que solo tiene el IdPaciente
 		  //para ser usado en Comtrol Paciente
 //		  File Archivo = new File("/mnt/sdcard/Android/data/ConfBECG.BECG");
-		  File Archivo = new File("/sdcard/Android/data/ConfBECG.BECG");
+		  File Archivo= new File(getFilesDir(),"ConfBECG.BECG");
 		  if (Archivo.exists()) {
 			  try {
-				 // RandomAccessFile ConfBECG = new RandomAccessFile("/mnt/sdcard/Android/data/ConfBECG.BECG", "rw");
-				  RandomAccessFile ConfBECG = new RandomAccessFile("/sdcard/Android/data/ConfBECG.BECG", "rw");
+				  // RandomAccessFile ConfBECG = new RandomAccessFile("/mnt/sdcard/Android/data/ConfBECG.BECG", "rw");
+				  RandomAccessFile ConfBECG = new RandomAccessFile("ConfBECG.BECG", "rw");
 				  // Nos situamos en el byte 0 del fichero.
 				  try {
 					  ConfBECG.seek(0);
 					  //tengo que extraer el valor de tiempo de registro por si fue modificado
-		//			  tiempo = (byte) ConfBECG.read();
+					  //			  tiempo = (byte) ConfBECG.read();
 					  for (int i = 0; i < ConfBECG.length(); i++) {
 						  char c = (char) ConfBECG.read();
 						  cadena = cadena + c;
@@ -771,6 +770,7 @@ public  class RegistrarActivitymio extends Activity {
 				  // TODO Auto-generated catch block
 				  e.printStackTrace();
 			  }
+
 			  //////////////////////////////////////////////////
 			  //////////////////////////////////////////////////
 			  if (parearse) {
@@ -849,7 +849,7 @@ public  class RegistrarActivitymio extends Activity {
 					Toast.makeText(getBaseContext(),e.toString(), Toast.LENGTH_LONG).show();
 				}
 			}
-			RandomAccessFile ConfBECG = new RandomAccessFile ("/mnt/sdcard/Android/data/ConfBECG.BECG", "rw");
+			RandomAccessFile ConfBECG = new RandomAccessFile ("ConfBECG.BECG", "rw");
 			// Nos situamos en el byte 0 del fichero.
 			try {
 				ConfBECG.seek(0);
